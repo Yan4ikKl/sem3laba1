@@ -94,22 +94,25 @@ public:
 
 	void reset()
 	{
-		T* old_ptr = release(); 
-		if (old_ptr) {
-			delete old_ptr; 
-		}
+		destroy();
 		ptr = nullptr;
 		count = nullptr; 
 	}
-	void reset(T* other) // use release
-	{
-		if (ptr == other)
-		{
-			return;
+	void reset(T* other) {
+		if (ptr == other) {
+			return; 
 		}
-		shared_ptr<T> buf = shared_ptr<T>(other);
-		this->ptr = buf.ptr;
-		delete buf.ptr;
+		if (count && --(*count) == 0) {
+			delete ptr;
+			delete count;
+		}
+		ptr = other;
+		if (ptr) {
+			count = new int(1);
+		}
+		else {
+			count = nullptr;
+		}
 	}
 	int shareCount() const
 	{
@@ -158,8 +161,9 @@ public:
 	{
 		if (this->Get() == nullptr)
 		{
-			
+			reset();                   
 		}
+		return *this;
 	}
 	T* get() 
 	{

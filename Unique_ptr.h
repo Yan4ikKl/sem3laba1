@@ -1,11 +1,13 @@
 #pragma once
 #include <cstddef>
 #include <cassert>
+#include <stdexcept>
 
 #include "Swap.h"
 #include "TypeTraits.h"
 #include "Deleter.h"
 #include "Move.h"
+
 template<typename T, class Deleter = My_Deleter<T>>
 class unique_ptr
 {
@@ -51,7 +53,9 @@ public:
 	}
 	U& operator*() const
 	{ // ptr == nullptr
-		assert(ptr != nullptr);
+		if (ptr == nullptr) {
+			throw std::runtime_error("Ошибка: не удалось выделить память.");
+		}
 		return *ptr;
 	}
 	U* operator->() const

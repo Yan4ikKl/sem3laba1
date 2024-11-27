@@ -17,23 +17,25 @@ private:
 	}
 public:
 	DynamicArray() :size(0), array(nullptr) {};
-	DynamicArray(int size):size(size)
-	{
-		if (size < 0) 
+	DynamicArray(int size) : size(size) {
+		if (size < 0) {
 			throw std::out_of_range("Invalid size\n");
-		if (size > 0)
-		{
-			array = unique_ptr<T[]>(new T[size]);
+		}
+		if (size > 0) {
+			array = unique_ptr<T[]>(new T[size]);  
+			for (int i = 0; i < size; ++i) {
+				array[i] = 0;  
+			}
 		}
 	}
-	DynamicArray(const T* other, int size) : DynamicArray<T>(size)
-	{
-		if (other == nullptr) throw std::out_of_range("Invalid argument in constructor");
-		for (int i = 0; i < size; i++)
-		{
+	DynamicArray(const T* other, int size) : DynamicArray<T>(size) {
+		if (size > 0 && other == nullptr) {
+			throw std::out_of_range("Invalid argument in constructor");
+		}
+		for (int i = 0; i < size; i++) {
 			array[i] = other[i];
 		}
-	} 
+	}
 	DynamicArray(const unique_ptr<T[]>& other, int size) : DynamicArray<T>(size)
 	{
 		if (other == nullptr) 
@@ -56,13 +58,13 @@ public:
 			throw std::out_of_range("Index is invalid");
 		return array[index];
 	}
-	T get(int index)
+	T get(int index) const
 	{
 		if (index < 0 || index >= this->size) 
 			throw std::out_of_range("Index out of range\n");
 		return array[index];
 	}
-	int getSize()
+	int getSize() const 
 	{
 		if (size < 0) 
 			throw std::out_of_range("Invalid size\n");
