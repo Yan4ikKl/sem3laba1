@@ -127,12 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ArraySequence.h" />
     <ClInclude Include="Deleter.h" />
     <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="Move.h" />
+    <ClInclude Include="Sequence.h" />
     <ClInclude Include="Shared_ptr.h" />
     <ClInclude Include="Swap.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="testConcat.h" />
     <ClInclude Include="TestDynamicArray.h" />
     <ClInclude Include="TestShared_ptr.h" />
     <ClInclude Include="TestUnique_ptr.h" />
@@ -143,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="testConcat.cpp" />
     <ClCompile Include="TestDynamicArray.cpp" />
     <ClCompile Include="TestShared_ptr.cpp" />
     <ClCompile Include="TestUnique_ptr.cpp" />

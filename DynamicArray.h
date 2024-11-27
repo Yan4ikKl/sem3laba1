@@ -78,16 +78,17 @@ public:
 	}
 	void resize(int newSize)
 	{
-		if (newSize < 0 || size > newSize) 
+		if (newSize < 0) 
 			throw std::out_of_range("Invalid size");
 		if (newSize == 0)
 		{
 			array.reset();
+			size = 0;
 			return;
 		}
 		auto buf = unique_ptr<T[]>(new T[newSize]);
 		int minimum{};
-		if (size < newSize)
+		if (size < newSize)	
 		{
 			minimum = size;
 		}
@@ -95,12 +96,8 @@ public:
 		{
 			minimum = newSize;
 		}
-		if (array != nullptr)
-		{
-			for (int i = 0; i < minimum; i++)
-			{
-				buf[i] = array[i];
-			}
+		for (int i = 0; i < minimum; i++) {
+			buf[i] = array[i];
 		}
 		array = buf;
 		size = newSize;
