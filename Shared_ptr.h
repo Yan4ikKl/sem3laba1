@@ -111,7 +111,7 @@ public:
 		}
 		ptr = other;
 		if (ptr) {
-			count = new int(1);
+			count = new Control(1);
 		}
 		else {
 			count = nullptr;
