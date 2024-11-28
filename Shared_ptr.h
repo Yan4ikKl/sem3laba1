@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cassert>
+#include <stdexcept>
 
 template <typename T> class shared_ptr
 {
@@ -85,9 +86,12 @@ public:
 	{
 		T* old_ptr = ptr; 
 		ptr = nullptr;    
-		if (count && --count->share_count == 0) {
-			delete count; 
-			count = nullptr;
+		if (count) {
+			--count->share_count;
+			if (count->share_count == 0) {
+				delete count;
+				count = nullptr;
+			}
 		}
 		return old_ptr; 
 	}
@@ -103,8 +107,7 @@ public:
 			return; 
 		}
 		if (count && --(*count) == 0) {
-			delete ptr;
-			delete count;
+			destroy();
 		}
 		ptr = other;
 		if (ptr) {
@@ -127,15 +130,20 @@ public:
 	}
 	T& operator *() const
 	{ // ptr == nullptr
-		assert(ptr != nullptr);
+		if (ptr == nullptr) {
+			throw std::runtime_error("Pointer cannot be null.");
+		}
+
 		return *ptr;
 	}
 	T* operator ->() const
 	{
 		return ptr;
 	}
-	T& operator [](int index) const
-	{
+	T& operator[](int index) const {
+		if (!ptr) {
+			throw std::runtime_error("Attempted to access a null pointer.");
+		}
 		return ptr[index];
 	}
 	shared_ptr& operator =(const shared_ptr<T>& other)
@@ -159,11 +167,8 @@ public:
 	}
 	shared_ptr& operator =(std::nullptr_t)
 	{
-		if (this->Get() == nullptr)
-		{
-			reset();                   
-		}
-		return *this;
+		reset();
+		return *this;    
 	}
 	T* get() 
 	{

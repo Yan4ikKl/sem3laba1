@@ -4,6 +4,7 @@
 #include "Sequence.h"
 #include "Unique_ptr.h"
 
+
 template<typename T>
 class ArraySequence : public Sequence<T> {
 private:
@@ -35,17 +36,26 @@ public:
         return size;
     }
 
-    ArraySequence<T> concat(const ArraySequence<T>& other) const {
-        int newSize = size + other.size;
-        ArraySequence<T> result(newSize);
-
-        for (int i = 0; i < size; ++i) {
-            result.get(i) = array[i];
+    void set(int index, const T& value) {
+        if (index < 0 || index >= size) {
+            throw std::out_of_range("Index out of range");
         }
-        for (int i = 0; i < other.size; ++i) {
-            result.get(size + i) = other.get(i);
+        array[index] = value;
+    }
+
+    virtual unique_ptr<ArraySequence<T>> concat(const ArraySequence<T>& other) const {
+        
+        unique_ptr<ArraySequence<T>> result(new ArraySequence<T>(this->size + other.size));
+
+        for (size_t i = 0; i < this->size; ++i) {
+            result->set(i, this->get(i));
+        }
+
+        for (size_t i = 0; i < other.size; ++i) {
+            result->set(this->size + i, other.get(i));
         }
 
         return result;
     }
+
 };
