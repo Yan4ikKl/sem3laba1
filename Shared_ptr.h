@@ -106,7 +106,7 @@ public:
 		if (ptr == other) {
 			return; 
 		}
-		if (count && --(*count) == 0) {
+		if (count && --(count->share_count) == 0) {
 			destroy();
 		}
 		ptr = other;
