@@ -117,6 +117,7 @@ public:
 			count = nullptr;
 		}
 	}
+
 	int shareCount() const
 	{
 		if (count == nullptr)
