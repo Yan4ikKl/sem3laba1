@@ -82,20 +82,6 @@ public:
 		return  shareCount()==1 ;
 	}
 
-	T* release()
-	{
-		T* old_ptr = ptr; 
-		ptr = nullptr;    
-		if (count) {
-			--count->share_count;
-			if (count->share_count == 0) {
-				delete count;
-				count = nullptr;
-			}
-		}
-		return old_ptr; 
-	}
-
 	void reset()
 	{
 		destroy();

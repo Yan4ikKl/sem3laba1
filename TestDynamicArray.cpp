@@ -34,7 +34,7 @@ void TestDynamicArray::testConstructors()
 	{
 		testUnique_ptr[i] = i;
 	}
-	DynamicArray<int> testArray4(testUnique_ptr, size);
+	DynamicArray<int> testArray4(std::move(testUnique_ptr), size);
 	assert(testArray4.getSize() == 5);
 	for (int i = 0; i < size; i++)
 	{

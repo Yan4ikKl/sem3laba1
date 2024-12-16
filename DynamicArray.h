@@ -16,6 +16,30 @@ private:
 		my_swap(array, other.array);
 	}
 public:
+
+	DynamicArray(const DynamicArray&) = delete;
+	DynamicArray& operator=(const DynamicArray&) = delete;
+
+
+	DynamicArray(DynamicArray&& other) noexcept
+		: size(other.size), array(std::move(other.array))
+	{
+		other.size = 0;
+	}
+
+	DynamicArray& operator=(DynamicArray&& other) noexcept
+	{
+		if (this != &other)
+		{
+			array.reset();
+			size = other.size;
+			array = std::move(other.array);
+			other.size = 0;
+		}
+		return *this;
+	}
+
+
 	DynamicArray() :size(0), array(nullptr) {};
 	DynamicArray(int size) : size(size) {
 		if (size < 0) {
@@ -36,15 +60,12 @@ public:
 			array[i] = other[i];
 		}
 	}
-	DynamicArray(const unique_ptr<T[]>& other, int size) : DynamicArray<T>(size)
+	DynamicArray(unique_ptr<T[]>&& other, int size) : size(size), array(std::move(other))
 	{
-		if (other == nullptr) 
+		if (array == nullptr)
 			throw std::out_of_range("Invalid argument in constructor");
-		for (int i = 0; i < size; i++)
-		{
-			array[i] = other[i];
-		}
 	}
+
 	virtual ~DynamicArray() = default;
 	T& operator[](int index)
 	{

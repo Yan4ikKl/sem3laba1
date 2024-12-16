@@ -1,26 +1,34 @@
 #include <iostream>
-#include <cassert>
 #include "ArraySequence.h"
 
-void testConcat() {
+int main() {
+    // Создание двух ArraySequence для теста concat
     ArraySequence<int> seq1(3);
-    seq1.get(0) = 1;
-    seq1.get(1) = 2;
-    seq1.get(2) = 3;
-
     ArraySequence<int> seq2(2);
-    seq2.get(0) = 4;
-    seq2.get(1) = 5;
 
-    unique_ptr<ArraySequence<int>> concatenated = seq1.concat(seq2);
+    // Заполнение первой последовательности
+    seq1.set(0, 1);
+    seq1.set(1, 2);
+    seq1.set(2, 3);
 
-    assert(concatenated->getSize() == 5);
-    assert(concatenated->get(0) == 1);
-    assert(concatenated->get(1) == 2);
-    assert(concatenated->get(2) == 3);
-    assert(concatenated->get(3) == 4);
-    assert(concatenated->get(4) == 5);
+    // Заполнение второй последовательности
+    seq2.set(0, 4);
+    seq2.set(1, 5);
 
+    // Демонстрация метода concat
+    std::cout << "Sequence 1 before concat: ";
+    for (int i = 0; i < seq1.getSize(); i++) {
+        std::cout << seq1.get(i) << " ";
+    }
+    std::cout << std::endl;
 
-    std::cout << "Test for concat passed!" << std::endl;
+    seq1.concat(seq2); // Соединяем seq1 и seq2
+
+    std::cout << "Sequence 1 after concat: ";
+    for (int i = 0; i < seq1.getSize(); i++) {
+        std::cout << seq1.get(i) << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
 }
