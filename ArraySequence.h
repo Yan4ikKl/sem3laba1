@@ -77,14 +77,18 @@ public:
 
     ~ArraySequence() = default;
 
-    void concat(const ArraySequence<T>& other) {
-        int otherSize = other.getSize();
-        int currentSize = this->getSize();
-        this->resize(currentSize + otherSize);
-        for (int i = 0; i < otherSize; i++) {
-            this->set(currentSize + i, other.get(i));
+    void concat(std::shared_ptr<Sequence<T>> other) override {
+        if (other) {
+            int otherSize = other->getSize();
+            int currentSize = this->getSize();
+            this->resize(currentSize + otherSize);
+            for (int i = 0; i < otherSize; i++) {
+                this->set(currentSize + i, other->get(i));
+            }
         }
     }
+
+
 
     ArraySequence<T>& operator=(const ArraySequence<T>& other) {
         if (this != &other) { 

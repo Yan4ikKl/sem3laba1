@@ -1,11 +1,13 @@
 #pragma once
 #include "Swap.h"
+#include "Deleter.h"
+
 
 #include <cstddef>
 #include <cassert>
 #include <stdexcept>
 
-template <typename T> class shared_ptr
+template <typename T, typename Deleter = My_Deleter<T>> class shared_ptr
 {
 private:
 	T* ptr;
@@ -18,14 +20,15 @@ private:
 		}
 	};
 	Control* count;
+	Deleter deleter;
 
 	//перенесу десктрутор в приват секцию
 	void destroy() 
 	{
 		if (!count) return;
-		count->share_count -= 1;
+		//count->share_count -= 1;
 		if (!count->share_count) {
-			delete ptr;
+			deleter(ptr);
 			delete count;
 		}
 	}
@@ -40,16 +43,12 @@ public:
 		this->ptr = nullptr;
 		this->count = nullptr;
 	}
-	explicit shared_ptr(T* other)
+	explicit shared_ptr(T* other, Deleter del = Deleter())
+		: ptr(other), count(nullptr), deleter(del)
 	{
-		this->ptr = other;
 		if (ptr != nullptr)
 		{
-			this->count = new Control(1);
-		}
-		else
-		{
-			this->count = nullptr;
+			count = new Control(1);
 		}
 	}
 	shared_ptr(const shared_ptr<T>& other)
@@ -88,21 +87,21 @@ public:
 		ptr = nullptr;
 		count = nullptr; 
 	}
-	void reset(T* other) {
-		if (ptr == other) {
-			return; 
-		}
-		if (count && --(count->share_count) == 0) {
-			destroy();
-		}
+	void reset(T* other)
+	{
+		if (ptr == other) return;
+		destroy();
 		ptr = other;
-		if (ptr) {
+		if (ptr)
+		{
 			count = new Control(1);
 		}
-		else {
+		else
+		{
 			count = nullptr;
 		}
 	}
+
 
 	int shareCount() const
 	{
